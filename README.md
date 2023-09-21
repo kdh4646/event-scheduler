@@ -11,6 +11,9 @@
 - Implement an Event Scheduler
 > [!IMPORTANT]
 > need to run both backend-api & react-frontend for project (react-router-dom required as well)
+> The dummy backend API does not use any external database
+> Instead the dummy data is saved to an "events.json" file inside the project folder.
+
 
 1. Handling HTTP request
 1. Implementing async/await (fetch..then()) to get response
