@@ -14,6 +14,8 @@
 > The dummy backend API does not use any external database
 > Instead the dummy data is saved to an "events.json" file inside the project folder.
 
+1. Using React Router to manage pages
+
 
 1. Handling HTTP request
 1. Implementing async/await (fetch..then()) to get response
