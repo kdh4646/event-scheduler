@@ -13,7 +13,10 @@ const ErrorPage = () => {
   //received status from Response()
   if (error.status === 500) {
     //data: object from Response() (JSON.stringify(...))
-    message = JSON.parse(error.data).message;
+    //message = JSON.parse(error.data).message;
+
+    //using json directly
+    message = error.data.message;
   }
 
   if (error.status === 404) {
