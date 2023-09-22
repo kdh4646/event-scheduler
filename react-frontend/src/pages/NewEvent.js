@@ -21,12 +21,9 @@ export async function action({ request, params }) {
     description: data.get("description"),
   };
 
-  //event data는 만들어져있어
-
-  //TODO: 402 error
   const response = await fetch("http://localhost:8080/events", {
     method: "POST",
-    header: {
+    headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(eventData),
