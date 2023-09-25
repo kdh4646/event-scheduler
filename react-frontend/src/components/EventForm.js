@@ -2,7 +2,14 @@
   Form: will omit the defualt action (== event.preventDefault())
         send it to action()
 */
-import { Form, useNavigation, useActionData } from "react-router-dom";
+import {
+  Form,
+  useNavigate,
+  useNavigation,
+  useActionData,
+  json,
+  redirect,
+} from "react-router-dom";
 
 import classes from "./EventForm.module.css";
 
@@ -13,14 +20,16 @@ function EventForm({ method, event }) {
   //access to data returning by action()
   const data = useActionData();
 
+  const navigate = useNavigate();
+
   const isSubmitting = navigation.state === "submitting";
 
   function cancelHandler() {
-    // ...
+    navigate("..");
   }
 
   return (
-    <Form method="post" className={classes.form}>
+    <Form method={method} className={classes.form}>
       {data && data.errors && (
         <ul>
           {Object.values(data.errors).map((err) => (
@@ -81,3 +90,47 @@ function EventForm({ method, event }) {
 }
 
 export default EventForm;
+
+//action() to fetch data
+export async function action({ request, params }) {
+  //method
+  const method = request.method;
+
+  //get data from "Form"
+  const data = await request.formData();
+
+  //get names from input tag
+  const eventData = {
+    title: data.get("title"),
+    image: data.get("image"),
+    date: data.get("date"),
+    description: data.get("description"),
+  };
+
+  let url = "http://localhost:8080/events";
+
+  if (method === "patch") {
+    const eventId = params.eventId;
+    url = "http://localhost:8080/events/" + eventId;
+  }
+
+  const response = await fetch(url, {
+    method: method,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(eventData),
+  });
+
+  //check validation (related to backend-api status 422 - invalid inputs)
+  if (response.status === 422) {
+    return response;
+  }
+
+  if (!response.ok) {
+    throw json({ message: "Could not save event." }, { state: 500 });
+  }
+
+  //redirect to different page
+  return redirect("/events");
+}
