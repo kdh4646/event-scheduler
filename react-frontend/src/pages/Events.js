@@ -1,20 +1,28 @@
+import { Suspense } from "react";
+
 //connect data from createBrowserRouter(), loader
-import { useLoaderData, json } from "react-router-dom";
+import { useLoaderData, json, defer, Await } from "react-router-dom";
 
 import EventsList from "../components/EventsList";
 
 function EventsPage() {
   //data return by loader
-  const data = useLoaderData();
-  const events = data.events;
+  const { events } = useLoaderData();
 
-  return <EventsList events={events} />;
+  //load component first while waiting data
+  //Await data, Suspense will show fallback
+  return (
+    <Suspense fallback={<p style={{ textAlign: "center" }}>Loading...</p>}>
+      <Await resolve={events}>
+        {(loadedEvents) => <EventsList events={loadedEvents} />}
+      </Await>
+    </Suspense>
+  );
 }
 
 export default EventsPage;
 
-//loader
-export async function loader() {
+async function loadEvents() {
   const response = await fetch("http://localhost:8080/events");
 
   if (!response.ok) {
@@ -31,4 +39,10 @@ export async function loader() {
   } else {
     return response;
   }
+}
+
+//loader
+export function loader() {
+  //load component first while waiting data
+  return defer({ events: loadEvents() });
 }
