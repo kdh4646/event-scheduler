@@ -37,7 +37,12 @@ async function loadEvents() {
     //using json directly
     return json({ message: "Could not fetch events." }, { status: 500 });
   } else {
-    return response;
+    //due to defer this doesn't work
+    //return response;
+
+    const resData = await response.json();
+
+    return resData.events;
   }
 }
 
