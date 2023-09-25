@@ -29,6 +29,11 @@ export async function action({ request, params }) {
     body: JSON.stringify(eventData),
   });
 
+  //check validation (related to backend-api status 422 - invalid inputs)
+  if (response.status === 422) {
+    return response;
+  }
+
   if (!response.ok) {
     throw json({ message: "Could not save event." }, { state: 500 });
   }

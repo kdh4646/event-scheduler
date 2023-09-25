@@ -2,13 +2,16 @@
   Form: will omit the defualt action (== event.preventDefault())
         send it to action()
 */
-import { Form, useNavigation } from "react-router-dom";
+import { Form, useNavigation, useActionData } from "react-router-dom";
 
 import classes from "./EventForm.module.css";
 
 function EventForm({ method, event }) {
   //get the state of triggered action
   const navigation = useNavigation();
+
+  //access to data returning by action()
+  const data = useActionData();
 
   const isSubmitting = navigation.state === "submitting";
 
@@ -18,6 +21,13 @@ function EventForm({ method, event }) {
 
   return (
     <Form method="post" className={classes.form}>
+      {data && data.errors && (
+        <ul>
+          {Object.values(data.errors).map((err) => (
+            <li key={err}>{err}</li>
+          ))}
+        </ul>
+      )}
       <p>
         <label htmlFor="title">Title</label>
         <input
