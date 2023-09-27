@@ -5,3 +5,7 @@ function AuthenticationPage() {
 }
 
 export default AuthenticationPage;
+
+export async function action() {
+  //
+}
