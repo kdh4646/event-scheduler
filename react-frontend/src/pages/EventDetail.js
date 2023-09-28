@@ -9,6 +9,7 @@ import {
 
 import EventItem from "../components/EventItem";
 import EventsList from "../components/EventsList";
+import { getAuthToken } from "../util/auth";
 
 const EventDetailPage = () => {
   /*
@@ -89,8 +90,13 @@ export async function loader({ requestm, params }) {
 
 export async function action({ request, params }) {
   const eventId = params.eventId;
+  const token = getAuthToken();
+
   const response = await fetch("http://localhost:8080/events/" + eventId, {
     method: request.method,
+    headers: {
+      Authorization: "Bearer " + token,
+    },
   });
 
   if (!response.ok) {
